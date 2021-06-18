@@ -1,0 +1,94 @@
+﻿@*@if (Movies == null)
+{
+    if (NullTemplate != null)
+    {
+        @NullTemplate
+    }
+    else
+    {
+        <img src="https://media1.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.webp?cid=ecf05e47t5rb4ppxafrnnfkkxn9fgoxbi4fuwrltcve0kzje&rid=giphy.webp&ct=g" />
+    }
+}
+else if (Movies.Count == 0)
+{
+    if (EmptyTemplate != null)
+    {
+        @EmptyTemplate
+    }
+    else
+    {
+        <text>No movies available</text>
+    }
+
+}
+else
+{
+    @foreach(var movie in Movies)
+            {
+                 <p>Title:@((MarkupString)movie.Title)</p>
+                 <p>Date:@movie.ReleaseDate</p>
+            }
+
+        <input type="checkbox" @onchange="()=> { displayButtons = !displayButtons; }" />
+
+    <input type="checkbox" @bind="displayButtons" />
+
+    @foreach (var m in Movies)
+    {
+        <IndividualMovie movie="m" isButtonRequired="displayButtons" DeleteMovie="DeleteMovie" />
+    }
+
+    <p>Create Movies</p>
+
+}*@
+<input type="checkbox" @bind="displayButtons" />
+<GenericList List="Movies">
+    <ElementTemplate Context="movie">
+        <IndividualMovie movie="movie" isButtonRequired="displayButtons" DeleteMovie="DeleteMovie" />
+    </ElementTemplate>
+</GenericList>
+
+@code{
+
+
+    [Parameter] public List<Movie> Movies { get; set; }
+    bool displayButtons = false;
+    [Parameter] public RenderFragment NullTemplate { get; set; }
+    [Parameter] public RenderFragment EmptyTemplate { get; set; }
+
+    void DeleteMovie(Movie movie)
+    {
+        Movies.Remove(movie);
+    }
+    //protected async override Task OnInitializedAsync()
+    //{
+    //    await Task.Delay(3000);
+    //    movies = new List<Movie>()
+    //    {
+    //        new Movie(){Title="<b>Spider Man</b>", ReleaseDate=new DateTime(2014,3,12)},
+    //        new Movie(){Title="<u>Moana</u>", ReleaseDate=new DateTime(2017,5,4)},
+    //        new Movie(){Title="Inception", ReleaseDate=new DateTime(2019,7,23)},
+    //    };
+
+    //}
+
+    protected override void OnInitialized()
+    {
+        Console.WriteLine("oninitialized movies count =" + Movies.Count.ToString());
+    }
+
+    protected override void OnParametersSet()
+    {
+        Console.WriteLine("OnParametersSet movies count =" + Movies.Count.ToString());
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        Console.WriteLine("OnAfterRender .firstRender =" + firstRender.ToString());
+    }
+
+    protected override bool ShouldRender()
+    {
+        return true;
+    }
+}

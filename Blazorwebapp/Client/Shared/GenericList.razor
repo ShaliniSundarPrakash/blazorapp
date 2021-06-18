@@ -1,0 +1,54 @@
+﻿@typeparam TItem
+
+@if (List == null)
+{
+    if (NullTemplate != null)
+    {
+        @NullTemplate
+    }
+    else
+    {
+        <img src="https://media1.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.webp?cid=ecf05e47t5rb4ppxafrnnfkkxn9fgoxbi4fuwrltcve0kzje&rid=giphy.webp&ct=g" />
+    }
+}
+else if (List.Count == 0)
+{
+    if (EmptyTemplate != null)
+    {
+        @EmptyTemplate
+    }
+    else
+    {
+        <text>No movies available</text>
+    }
+
+}
+else
+{
+    @*@foreach(var movie in Movies)
+                {
+                     <p>Title:@((MarkupString)movie.Title)</p>
+                     <p>Date:@movie.ReleaseDate</p>
+                }
+
+            <input type="checkbox" @onchange="()=> { displayButtons = !displayButtons; }" />
+
+        <input type="checkbox" @bind="displayButtons" />*@
+
+    @foreach (var element in List)
+    {
+        @ElementTemplate(element)
+
+    }
+
+    <p>Create Movies</p>
+
+}
+
+@code {
+
+    [Parameter] public RenderFragment NullTemplate { get; set; }
+    [Parameter] public RenderFragment EmptyTemplate { get; set; }
+    [Parameter] public RenderFragment<TItem> ElementTemplate { get; set; }
+    [Parameter] public List<TItem> List { get; set; }
+}

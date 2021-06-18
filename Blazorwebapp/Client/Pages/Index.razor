@@ -1,0 +1,62 @@
+﻿@page "/"
+@inject SingletonService singleton
+
+<p>Singleton count: @singleton.Value</p>
+<p>Hello, @customToUpper(name)</p>
+
+
+<p>lets do 2+2 = @(2+2)</p>
+
+<button @onclick="@writeinlog">click me</button>
+<button @onclick="@AddNewMovie">Add new movie</button>
+
+<MoviesList Movies="movies">
+    @* <span style="color:red">This is loading..</span>
+        <img src="https://media1.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.webp?cid=ecf05e47t5rb4ppxafrnnfkkxn9fgoxbi4fuwrltcve0kzje&rid=giphy.webp&ct=g" />*@
+
+    <NullTemplate>
+        <span style="color:red">This is loading..</span>
+    </NullTemplate>
+    <EmptyTemplate>
+        <span style="color:blue">no movies</span>
+    </EmptyTemplate>
+</MoviesList>
+
+@*<DummyText placeholder="movie name"></DummyText>
+    <DummyText @attributes="@(new Dictionary<string, object>() {
+                              {"Placeholder","moviename" },
+                              { "disabled","true"}
+                              })"></DummyText>
+    <DummyText @attributes="@additionalParameters"></DummyText>*@
+@code{
+    string name = "Shalini";
+
+    private List<Movie> movies = new List<Movie>();
+    private Dictionary<string, object> additionalParameters = new Dictionary<string, object>() {
+                          {"Placeholder","moviename" },
+                          { "disabled","true"}
+                          };
+
+    protected override void OnInitialized()
+    {
+        movies = new List<Movie>()
+    {
+                new Movie(){Title="<b>Spider Man</b>", ReleaseDate=new DateTime(2014,3,12)},
+                new Movie(){Title="<u>Moana</u>", ReleaseDate=new DateTime(2017,5,4)},
+                new Movie(){Title="Inception", ReleaseDate=new DateTime(2019,7,23)},
+            };
+
+    }
+
+    string customToUpper(string value) => value.ToUpper();
+
+    void writeinlog()
+    {
+        Console.WriteLine("I have been clicked " + name);
+    }
+
+    private void AddNewMovie()
+    {
+        movies.Add(new Movie() { Title = "Movie Sample", ReleaseDate = DateTime.Today });
+    }
+}
